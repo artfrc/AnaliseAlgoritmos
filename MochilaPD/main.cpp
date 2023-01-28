@@ -9,13 +9,13 @@ using namespace std;
 
 const int INF = 0x3f3f3f3f;
 int numberItens;
-vector<vector<int>> memo; 
+vector<vector<int>> matrix; 
 
-int knapsack(int currentItem, vector<int>& weightsItens, vector<int>& valueItens, int capacity);
+int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity);
 
 int main() { _
     while(cin >> numberItens) {
-        memo.clear();
+        matrix.clear();
         //cout << "Digite o numero de itens que vamos ter: ";
         vector<int> weightsItens;
         vector<int> valueItens;
@@ -30,18 +30,18 @@ int main() { _
         //cout << "Digite a capacidade da mochila: ";
         cin >> capacity;
 
-        vector<int> v(capacity,-1);
+        vector<int> v(capacity+1,0);
         
         // Criando a matriz de memorização
         for(int i = 0; i < numberItens; ++i) {
-            memo.push_back(v);
+            matrix.push_back(v);
         }
 
         // Comeca calcular o tempo de execucao aqui
-        auto begin = chrono::high_resolution_clock::now();
         int ans;
+        auto begin = chrono::high_resolution_clock::now();
         for(int i = 0; i < 3; i++) {
-            ans = knapsack(0,weightsItens,valueItens,capacity);
+            ans = knapsack(weightsItens,valueItens,capacity);
         }
         // Termina de calcular o tempo de execucao aqui
         auto end = chrono::high_resolution_clock::now() - begin;
@@ -52,24 +52,36 @@ int main() { _
     }
 }
 
-int knapsack(int currentItem, vector<int>& weightsItens, vector<int>& valueItens, int capacity) {
-    // Estourou o limite da mochila
-    if(capacity < 0) {
-        return -INF; // Esse valor será tao pequeno que não retornará ele
-    }
-    // Passei por todos os items da mochila
-    if(currentItem >= numberItens or capacity == 0) {
-        return 0;
-    }
-    // Verifico se já calculei, se sim, então não preciso calcular novamente
-    int& pdm = memo[currentItem][capacity-1];
-    if(pdm != -1) return pdm;
+int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity) {
+    int ans = 0;
 
-    // Vou pegar a opcao em que me dê o maior valor
-    return pdm = max(
-        // Opcao de pegar o item
-        knapsack(currentItem+1,weightsItens,valueItens,capacity-weightsItens[currentItem])+valueItens[currentItem],
-        //Opcao de NAO pegar o item
-        knapsack(currentItem+1,weightsItens,valueItens,capacity)
-    );
+    // Primeira linha da matriz
+    for(int j = 0; j < capacity+1; j++) {
+        if(weightsItens[0] <= j) {
+            matrix[0][j] = valueItens[0];
+        }
+    }
+
+    // Segunda linha da matriz pra frente
+    for(int i = 1; i < weightsItens.size(); i++) {
+        for(int j = 0; j < capacity+1; j++) {
+            int rest = j;
+            int value = 0;
+            if(weightsItens[i] <= j) {
+                rest -= weightsItens[i];
+                value += valueItens[i];
+
+                if(rest > 0) value += matrix[i-1][rest];
+
+                if(matrix[i-1][j] > value) matrix[i][j] = matrix[i-1][j];
+                else matrix[i][j] = value;
+
+                if(value > ans) ans = value;
+            } else {
+                if(matrix[i-1][j] > matrix[i][j]) matrix[i][j] = matrix[i-1][j];
+                else matrix[i][j] = value;
+            }
+        }
+    }
+    return ans;
 }

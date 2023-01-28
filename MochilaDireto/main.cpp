@@ -30,10 +30,14 @@ int main() { _
 
         // Comeca calcular o tempo de execucao aqui
         auto begin = chrono::high_resolution_clock::now();
-        int ans = knapsack(0,weightsItens,valueItens,capacity);
+        int ans;
+        for(int i = 0; i < 3; i++) {
+            ans = knapsack(0,weightsItens,valueItens,capacity);
+        }
         // Termina de calcular o tempo de execucao aqui
         auto end = chrono::high_resolution_clock::now() - begin;
         double seconds = chrono::duration_cast<chrono::milliseconds>(end).count();
+        seconds /= 3;
         cout << "Valor maximo: " << ans << endl;
         cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl;
     }
