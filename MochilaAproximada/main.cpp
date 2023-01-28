@@ -2,22 +2,23 @@
 #include <vector>
 #include <chrono>
 #include <iomanip>
+#include <map>
+#include <algorithm>
 
 #define _ ios::sync_with_stdio(0);cin.tie(0);
 
 using namespace std;
 
-const int INF = 0x3f3f3f3f;
 int numberItens;
-vector<vector<int>> memo; 
+multimap<double,int> mm;
 
-int knapsack(int currentItem, vector<int>& weightsItens, vector<int>& valueItens, int capacity);
+int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity);
 
 int main() { _
     int count = 0;
     while(cin >> numberItens and ++count) {
         cout << "[TESTE " << count << "]" << endl;
-        memo.clear();
+        mm.clear();
         //cout << "Digite o numero de itens que vamos ter: ";
         vector<int> weightsItens;
         vector<int> valueItens;
@@ -32,18 +33,16 @@ int main() { _
         //cout << "Digite a capacidade da mochila: ";
         cin >> capacity;
 
-        vector<int> v(capacity,-1);
-        
-        // Criando a matriz de memorização
-        for(int i = 0; i < numberItens; ++i) {
-            memo.push_back(v);
+        // Multimap é um map ordenado pela chave
+        for(int i = 0; i < numberItens; i++) {
+            mm.insert(make_pair((double)valueItens[i]/(double)weightsItens[i],i));
         }
-
+        
         // Comeca calcular o tempo de execucao aqui
-        auto begin = chrono::high_resolution_clock::now();
         int ans;
+        auto begin = chrono::high_resolution_clock::now();
         for(int i = 0; i < 3; i++) {
-            ans = knapsack(0,weightsItens,valueItens,capacity);
+            ans = knapsack(weightsItens,valueItens,capacity);
         }
         // Termina de calcular o tempo de execucao aqui
         auto end = chrono::high_resolution_clock::now() - begin;
@@ -54,24 +53,14 @@ int main() { _
     }
 }
 
-int knapsack(int currentItem, vector<int>& weightsItens, vector<int>& valueItens, int capacity) {
-    // Estourou o limite da mochila
-    if(capacity < 0) {
-        return -INF; // Esse valor será tao pequeno que não retornará ele
+int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity) {
+    int ans = 0;
+    int rest = capacity;
+    for(auto it = mm.rbegin(); it != mm.rend() and rest > 0; it++) {
+        if(rest >= weightsItens[it->second]) {
+            ans += valueItens[it->second];
+            rest -= weightsItens[it->second];
+        }
     }
-    // Passei por todos os items da mochila
-    if(currentItem >= numberItens or capacity == 0) {
-        return 0;
-    }
-    // Verifico se já calculei, se sim, então não preciso calcular novamente
-    int& pdm = memo[currentItem][capacity-1];
-    if(pdm != -1) return pdm;
-
-    // Vou pegar a opcao em que me dê o maior valor
-    return pdm = max(
-        // Opcao de pegar o item
-        knapsack(currentItem+1,weightsItens,valueItens,capacity-weightsItens[currentItem])+valueItens[currentItem],
-        //Opcao de NAO pegar o item
-        knapsack(currentItem+1,weightsItens,valueItens,capacity)
-    );
+    return ans;
 }

@@ -7,14 +7,15 @@
 
 using namespace std;
 
-const int INF = 0x3f3f3f3f;
 int numberItens;
 vector<vector<int>> matrix; 
 
 int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity);
 
 int main() { _
-    while(cin >> numberItens) {
+    int count = 0;
+    while(cin >> numberItens and ++count) {
+        cout << "[TESTE " << count << "]" << endl;
         matrix.clear();
         //cout << "Digite o numero de itens que vamos ter: ";
         vector<int> weightsItens;
@@ -32,7 +33,7 @@ int main() { _
 
         vector<int> v(capacity+1,0);
         
-        // Criando a matriz de memorização
+        // Criando a matriz inicializada com 0
         for(int i = 0; i < numberItens; ++i) {
             matrix.push_back(v);
         }
@@ -48,20 +49,18 @@ int main() { _
         double seconds = chrono::duration_cast<chrono::milliseconds>(end).count();
         seconds /= 3;
         cout << "Valor maximo: " << ans << endl;
-        cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl;
+        cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl << endl;
     }
 }
 
 int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity) {
     int ans = 0;
-
     // Primeira linha da matriz
     for(int j = 0; j < capacity+1; j++) {
         if(weightsItens[0] <= j) {
             matrix[0][j] = valueItens[0];
         }
     }
-
     // Segunda linha da matriz pra frente
     for(int i = 1; i < weightsItens.size(); i++) {
         for(int j = 0; j < capacity+1; j++) {

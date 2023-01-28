@@ -13,7 +13,9 @@ int numberItens;
 int knapsack(int currentItem, vector<int>& weightsItens, vector<int>& valueItens, int capacity);
 
 int main() { _
-    while(cin >> numberItens) {
+    int count = 0;
+    while(cin >> numberItens and ++count) {
+        cout << "[TESTE " << count << "]" << endl;
         //cout << "Digite o numero de itens que vamos ter: ";
         vector<int> weightsItens;
         vector<int> valueItens;
@@ -39,7 +41,7 @@ int main() { _
         double seconds = chrono::duration_cast<chrono::milliseconds>(end).count();
         seconds /= 3;
         cout << "Valor maximo: " << ans << endl;
-        cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl;
+        cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl << endl;
     }
 }
 
@@ -49,7 +51,7 @@ int knapsack(int currentItem, vector<int>& weightsItens, vector<int>& valueItens
         return -INF; // Esse valor será tao pequeno que não retornará ele
     }
     // Passei por todos os items da mochila
-    if(currentItem >= numberItens) {
+    if(currentItem >= numberItens or capacity == 0) {
         return 0;
     }
     // Vou pegar a opcao em que me dê o maior valor
