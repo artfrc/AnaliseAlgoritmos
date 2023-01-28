@@ -17,6 +17,7 @@ int main() { _
     int count = 0;
     while(cin >> numberItens and ++count) {
         cout << "[TESTE " << count << "]" << endl;
+        auto begin = chrono::high_resolution_clock::now();
         memo.clear();
         //cout << "Digite o numero de itens que vamos ter: ";
         vector<int> weightsItens;
@@ -39,16 +40,10 @@ int main() { _
             memo.push_back(v);
         }
 
-        // Comeca calcular o tempo de execucao aqui
-        auto begin = chrono::high_resolution_clock::now();
         int ans;
-        for(int i = 0; i < 3; i++) {
-            ans = knapsack(0,weightsItens,valueItens,capacity);
-        }
-        // Termina de calcular o tempo de execucao aqui
+        ans = knapsack(0,weightsItens,valueItens,capacity);
         auto end = chrono::high_resolution_clock::now() - begin;
         double seconds = chrono::duration_cast<chrono::milliseconds>(end).count();
-        seconds /= 3;
         cout << "Valor maximo: " << ans << endl;
         cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl << endl;
     }

@@ -15,6 +15,7 @@ int knapsack(vector<int>& weightsItens, vector<int>& valueItens, int capacity);
 int main() { _
     int count = 0;
     while(cin >> numberItens and ++count) {
+        auto begin = chrono::high_resolution_clock::now();
         cout << "[TESTE " << count << "]" << endl;
         matrix.clear();
         //cout << "Digite o numero de itens que vamos ter: ";
@@ -38,16 +39,10 @@ int main() { _
             matrix.push_back(v);
         }
 
-        // Comeca calcular o tempo de execucao aqui
         int ans;
-        auto begin = chrono::high_resolution_clock::now();
-        for(int i = 0; i < 3; i++) {
-            ans = knapsack(weightsItens,valueItens,capacity);
-        }
-        // Termina de calcular o tempo de execucao aqui
+        ans = knapsack(weightsItens,valueItens,capacity);
         auto end = chrono::high_resolution_clock::now() - begin;
         double seconds = chrono::duration_cast<chrono::milliseconds>(end).count();
-        seconds /= 3;
         cout << "Valor maximo: " << ans << endl;
         cout << fixed << setprecision(4) << "Tempo de execucao: " << seconds/1000. << " segundos" << endl << endl;
     }
