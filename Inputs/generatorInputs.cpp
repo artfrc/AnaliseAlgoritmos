@@ -13,8 +13,8 @@ int numberItens, weight, value, capacity;
 int main() {
     cout << "Numero de itens para gerar: ";
     cin >> numberItens;
-    cout << "Capacidade da mochila: ";
-    cin >> capacity;
+    // cout << "Capacidade da mochila: ";
+    // cin >> capacity;
     fstream file;
     file.open("efficiencyInputTest.in", ios::out);
     if(file.is_open()) {
@@ -24,7 +24,7 @@ int main() {
         for(int i = 0; i < numberItens; ++i) {
             file << 1+rand()%MAX_WEIGHT << " " << 1+rand()%MAX_VALUE << endl;
         }
-        file << capacity;
+        file << 50;
         file.close();
     } else {
         cout << "Falha" << endl;
